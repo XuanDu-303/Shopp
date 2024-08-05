@@ -1,0 +1,49 @@
+{% extends "app/base.html" %}
+{% load static %}
+{% block title %}Category{% endblock title %}
+{% block main-content %}
+  <div class="container my-5">
+    <div class="row">
+      <div class="col-sm-3">
+        <div class="list-group">
+          {% if title == 'Watch' %}
+            <a href="#" class="list-group-item list-group-item-action active" aria-current="true">Đồng hồ</a>
+          {% elif title == 'HouseholdAppliances' %}
+            <a href="#" class="list-group-item list-group-item-action active" aria-current="true">Thiết bị gia dụng</a>
+          {% elif title == 'JewelryAccessories' %}
+            <a href="#" class="list-group-item list-group-item-action active" aria-current="true">Phụ kiện, trang sức</a>
+          {% elif title == 'Laptop' %}
+            <a href="#" class="list-group-item list-group-item-action active" aria-current="true">Laptop</a>
+          {% elif title == 'Phone' %}
+            <a href="#" class="list-group-item list-group-item-action active" aria-current="true">Điện thoại</a>
+          {% elif title == 'Fashion' %}
+            <a href="#" class="list-group-item list-group-item-action active" aria-current="true">Thời Trang</a>
+          {% else %}
+            <a href="#" class="list-group-item list-group-item-action active" aria-current="true">{{ title }}</a>
+          {% endif %}
+          {% for prod in products %}
+          <a href="{% url 'product-detail' prod.id %}" class="list-group-item list-group-item-action">{{ prod.title }}</a>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="col-sm-5">
+        <div class="row">
+          {% for prod in products %} 
+          <div class="col text-center mb-4 product-card">
+            <a href="{% url 'product-detail' prod.id %}" class="btn">
+                <div>
+                    <img src="{{ prod.product_image.url }}" class="product-image" />
+                    <div class="fw-bold">{{ prod.title }}</div>
+                    <div class="fw-bold text-danger">
+                        Giá: {{ prod.discounted_price | floatformat:"3" }} VND
+                        <div><small class="fw-light text-decoration-line-through">Giá gốc: {{ prod.selling_price | floatformat:"3" }} VND</small></div>
+                    </div>
+                </div>
+            </a>
+        </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock main-content %}

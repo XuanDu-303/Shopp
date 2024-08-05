@@ -1,0 +1,42 @@
+{% extends "app/base.html" %}
+{% load static %}
+{% block title %}About{% endblock title %}
+
+
+{% block banner-slider %}
+  <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <img src="{% static 'app/images/banner/banner1.png' %}" class="d-block w-100" alt="banner image">
+      </div>
+      <div class="carousel-item ">
+        <img src="{% static 'app/images/banner/banner2.png' %}" class="d-block w-100" alt="banner image">
+      </div>
+      <div class="carousel-item ">
+        <img src="{% static 'app/images/banner/banner3.png' %}" class="d-block w-100" alt="banner image">
+      </div>
+    </div>
+  </div>
+{% endblock banner-slider %}
+
+{% block main-content %}
+<div class="container mt-3">
+  <br>
+  <h2 class="text-center">Giới Thiệu</h2>
+  <br>
+  <div class="row container">
+    <p class="fs-4 text-center">
+      Đây là một công ty TNHH đại chúng có văn phòng đăng ký và công ty tại Thành phố Da Nang, Viet Nam. Công ty được thành lập vào năm 2018 và bắt đầu sản xuất vào năm 2020. Đây là một trong những Công ty niêm yết đại chúng phát triển nhanh nhất ở Viet Nam.
+    </p>
+  </div>
+  <br><br>
+  <h2 class="text-center">Sứ mệnh</h2>
+  <br>
+  <div class="row container">
+      <p class="fs-4 text-center">
+        Sử dụng công nghệ phù hợp để làm hài lòng Khách hàng của chúng tôi.<br> Trao quyền cho cộng đồng nông dân thông qua Mô hình 'Nông nghiệp quan hệ độc đáo của chúng tôi.<br> Dự đoán, hiểu và đáp ứng nhu cầu của Khách hàng bằng cách tạo ra các sản phẩm chất lượng cao và tạo ra chúng có sẵn thông qua các kênh sáng tạo và thuận tiện.
+      </p>
+  </div>
+</div>
+<br><br>
+{% endblock main-content %}

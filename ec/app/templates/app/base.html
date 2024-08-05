@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+    <link rel="stylesheet" href="{% static 'app/css/owl.carousel.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'app/css/style.css' %}" />
+    <title> Shopp ecommerce | {% block title %} {% endblock title %} Document </title>
+  </head>
+    <body>
+      <nav class="navbar navbar-expand-lg navbar-dart custom-navbar shadow-sm">
+      <div class="container-fluid">
+        <a class="navbar-brand text-primary bold" href="/">
+          <img src="{% static "app/images/logo.png" %}"width="50" height="50" />hopp
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="nav1 navbar-nav me-auto mb-2 mb-lg-0 text-black">
+            {% if request.user.is_authenticated %}
+            <li class=" nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Sản Phẩm
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{% url 'category' 'Watch' %}">Đồng hồ</a></li>
+                <li><a class="dropdown-item" href="{% url 'category' 'HouseholdAppliances' %}">Thiết bị gia dụng</a></li>
+                <li><a class="dropdown-item" href="{% url 'category' 'JewelryAccessories' %}">Phụ kiện, trang sức</a></li>
+                <li><a class="dropdown-item" href="{% url 'category' 'Laptop' %}">Laptop</a></li>
+                <li><a class="dropdown-item" href="{% url 'category' 'Phone' %}">Điện thoại</a></li>
+                <li><a class="dropdown-item" href="{% url 'category' 'Fashion' %}">Thời Trang</a></li>
+              </ul>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'about'%}">Giới Thiệu</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'contact'%}">Liên Hệ</a>
+            </li>
+          </ul>
+          <form class="search d-flex" role="search" action="/search">
+            <input class="form-control me-2" type="search" placeholder="Tìm Kiếm" name="search" aria-label="Search">
+            <button class="search-btn btn btn-outline-primary text-white" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+          </form>
+        </div>
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item dropdown mx-2">
+            <a class="account nav-link dropdown-toggle" href='#' id="profileDopdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-regular fa-user"></i>&nbsp;</a>
+            <ul class="dropdown dropdown-menu text-dart" aria-labelledby="profileDopdown">
+              <li><a class="dropdown-item" href="{% url 'profile' %}">Hồ Sơ</a></li>
+              <li><a class="dropdown-item" href="{% url 'orders' %}">Đặt Hàng</a></li>
+              <li><a class="dropdown-item" href="{% url 'passwordchange' %}">Đổi Mật Khẩu</a></li>
+              <li>
+                <form method="post" action="{% url 'logout' %}">
+                  {% csrf_token %}
+                  <button type="submit">Đăng Xuất</button>
+                </form>
+              </li>
+            </ul>
+          </li>
+          <li class="cart nav-item text-secondary">
+            <a href="{% url 'showcart' %}" class="btn"><i class="fa-solid fa-cart-shopping"></i>&nbsp;<span class="badge text-white ms-1 btn btn-secondary rounded-pill" id="cart_quantity">
+              {% if totalitem > 0 %} {{totalitem}} {% else %} {{ 0 }} {% endif %}</span></a>
+          </li>
+          <li class="wishlist nav-item mx-2">
+            <a href="#" class="nav-link"><i class="fa-solid fa-heart"></i></a>
+          </li>
+          {% else %}
+          <li class="nav-item mx-2">
+            <a href="{% url 'login' %}" class="nav-link">Đăng Nhập</a>
+          </li>
+          <li class="nav-item mx-2">
+            <a href="{% url 'customerregistration' %}" class="nav-link">Đăng Kí</a>
+          </li>
+          {% endif %}
+        </ul>
+      </div>
+    </nav>
+
+    {% block banner-slider %}{% endblock banner-slider %}
+    {% block information %}{% endblock information %}
+    {% block main-content %}{% endblock main-content %}
+    {% block payment-gateway %}{% endblock payment-gateway %}
+
+    <footer class="container-fluid fixed-bottom bg-primary text-center p-2 mt-5">
+      
+    </footer>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+      integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+      integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="{% static 'app/js/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'app/js/all.min.js' %}"></script>
+    <script src="{% static 'app/js/myscript.js' %}"></script>
+  </body>
+</html>

@@ -1,0 +1,37 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% block title %} Kết Quả Tìm Kiếm {% endblock title %}
+{% block main-content %}
+<div class="container my-5">
+    <h3>Kết Quả Tìm Kiếm cho "{{ request.GET.search }}"</h3>
+    <div class="row">
+        <div class="col-sm-8">
+            <div class="row">
+                {% if products %}
+                {% for product in products %}
+                <div class="col-md-4 mb-2">
+                    <a href="{% url 'product-detail' product.id %}" class="card">
+                    <img src="{{ product.product_image.url }}" class="card-img-top" alt="{{ product.title }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ product.title }}</h5>
+                        <p>Giá gốc: <span class="card-text no-discount text-decoration-line-through">&#8363;{{ product.selling_price|floatformat:"3" }}</span></p>
+                        {% if product.discounted_price < product.selling_price %}
+                        <p class="card-text" style="color: red">Giá: &#8363;{{ product.discounted_price|floatformat:"3"  }}</p>
+                        {% endif %}
+                    </div>
+                    </a>
+                </div>
+                {% endfor %}
+                {% else %}
+                    <div class="col-md-12">
+                        <p>Không tìm thấy kết quả phù hợp.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock main-content %}
+<style>
+
+</style>

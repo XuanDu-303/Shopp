@@ -1,0 +1,164 @@
+{% extends "app/base.html" %}
+{% load static %}
+{% block title %} {{ product.title }} {% endblock title %}
+{% block main-content %}
+<div class="container my-5">
+    <div class="row flex justify-content-between">
+        <div class="img2 col-lg-4">
+            <img src="{{ product.product_image.url }}" class="image w-100" alt="">
+        </div>
+        <div class="productdetail col-lg-6">
+            <h2 style="font-family: Georgia">{{ product.title }}</h2>
+
+            <div class="d-flex">
+                <p>{{ avg_rating | floatformat | default:"Chưa có đánh giá" }}</p>
+                <div class="star-rating mb-2 ms-1 " style="font-size: 15px;">
+                    {% if avg_rating %}
+                        {% for star in "12345" %}
+                            {% if star <= avg_rating|floatformat %}
+                                <i class="fas fa-star text-warning"></i>
+                            {% else %}
+                                <i class="far fa-star text-warning"></i>
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <p>Chưa có đánh giá</p>
+                    {% endif %}
+                </div>
+                &emsp;|&emsp;<p>{{ num_reviews }} Đánh giá</p>
+            </div>
+            
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <span class="no-discount text-decoration-line-through">&#8363;{{ product.discounted_price | floatformat:"3" }}</span>
+                <span class="discount" style="font-size: 30px;">&#8363;{{ product.selling_price | floatformat:"3" }}</span>
+            </div>
+            
+            <div class="mt-3">Số lượng có sẵn: {{ product.quantity }}</div>
+            <br/>
+            <br/>
+            <div class="fs-5 mb-4" style="font-family: Rajdhani;">
+                <li>Mô tả: {{ product.description }}</li>
+                <li>Thương hiệu: {{ product.brand }}</li>
+                <li>Chất liệu: {{ product.composition }}</li>
+            </div>
+            <div class="btn-cart">
+                <form action="/add-to-cart" class="d-inline">
+                    <input type="hidden" name="prod_id" value="{{ product.id }}" />
+                    <button type="submit" class="btn btn-primary shadow px-5 py-2">Thêm vào giỏ hàng</button>
+                </form>
+                <a href="{% url 'showcart' %}" class="btn btn-warning shadow px-5 py-2 ms-4">Mua</a>
+                {% if wishlist %}
+                    <a pid="{{ product.id }}" class="minus-wishlist bg-danger text-white shadow px-5 py-2 ms-4"><i class="fas fa-heart fa-lg"></i></a>
+                {% else %}
+                    <a pid="{{ product.id }}" class="plus-wishlist bg-primary text-white shadow px-5 py-2 ms-4"><i class="fas fa-heart fa-lg"></i></a>
+                {% endif %}
+            </div>
+        </div>
+        <hr class="mt-4">
+        <div class="col-lg-9">
+            <!-- Hiển thị đánh giá -->
+            <div class="mb-4">
+                <h5>ĐÁNH GIÁ SẢN PHẨM</h5>
+                <ul class="list-group">
+                    {% for review in reviews %}
+                        <li class="list-group-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="fw-bold">{{ review.user.username }}</span>
+                                    <span class="ms-2 text-muted">({{ review.created_at|date:"d/m/Y" }})</span>
+                                    <div class="star-rating mt-1">
+                                        {% for star in "12345" %}
+                                            {% if review.rating >= star|add:"0" %}
+                                                <i class="fas fa-star text-warning"></i>
+                                            {% else %}
+                                                <i class="far fa-star text-warning"></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                    <p class="mb-0">{{ review.comment }}</p>
+                                </div>
+                            </div>
+                        </li>
+                    {% empty %}
+                        <li class="list-group-item">Chưa có đánh giá nào cho sản phẩm này.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% if not existing_review %}
+            <!-- Form tạo đánh giá mới -->
+                <form class="mb-4" method="post" action="{% url 'create_review' product.id %}">
+                    {% csrf_token %}
+                    <div class="mb-3 star-rating">
+                        <label for="rating" class="form-label">Đánh giá (từ 1 đến 5 sao):</label>
+                        <input type="hidden" id="rating" name="rating" value="0">
+                        <ul>
+                            <li class="star"><i class="fas fa-star"></i></li>
+                            <li class="star"><i class="fas fa-star"></i></li>
+                            <li class="star"><i class="fas fa-star"></i></li>
+                            <li class="star"><i class="fas fa-star"></i></li>
+                            <li class="star"><i class="fas fa-star"></i></li>
+                        </ul>
+                    </div>
+                    <div class="mb-3">
+                        <label for="comment" class="form-label">Nhận xét:</label>
+                        <textarea id="comment" name="comment" class="form-control" rows="4" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Gửi đánh giá</button>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+    .star-rating {
+        position: relative;
+    }
+    .star {
+        display: inline-block;
+        font-size: 20px;
+        cursor: pointer;
+        color: #ccc;
+    }
+    .star.selected, .star:hover {
+        color: gold; /* Màu sao khi chọn hoặc hover */
+    }
+</style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const stars = document.querySelectorAll(".star");
+        const ratingInput = document.getElementById("rating");
+    
+        stars.forEach(function (star, index) {
+            star.addEventListener("mouseover", function () {
+                highlightStars(index);
+            });
+    
+            star.addEventListener("mouseout", function () {
+                resetStars();
+                highlightStars(tempRating - 1);
+            });
+    
+            star.addEventListener("click", function () {
+                tempRating = index + 1;
+                ratingInput.value = tempRating;
+                highlightStars(tempRating - 1);
+            });
+        });
+    
+        function highlightStars(index) {
+            for (let i = 0; i <= index; i++) {
+                stars[i].classList.add("selected");
+            }
+        }
+    
+        function resetStars() {
+            stars.forEach(function (star) {
+                star.classList.remove("selected");
+            });
+        }
+    });
+</script>
+
+{% endblock main-content %}
